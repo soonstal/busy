@@ -12,8 +12,8 @@ interface Id {
   id: string;
 }
 
-const injectScriptTag = (doc: Document, item: ScriptItem & Id, handler: (id: string, err?: unknown) => void) => {
-  const scriptTag = doc.createElement('script');
+var injectScriptTag = (doc: Document, item: ScriptItem & Id, handler: (id: string, err?: unknown) => void) => {
+  var scriptTag = doc.createElement('script');
   scriptTag.referrerPolicy = 'origin';
   scriptTag.type = 'application/javascript';
   scriptTag.id = item.id;
@@ -21,12 +21,12 @@ const injectScriptTag = (doc: Document, item: ScriptItem & Id, handler: (id: str
   scriptTag.async = item.async ?? false;
   scriptTag.defer = item.defer ?? false;
 
-  const loadHandler = () => {
+  var loadHandler = () => {
     scriptTag.removeEventListener('load', loadHandler);
     scriptTag.removeEventListener('error', errorHandler);
     handler(item.src);
   };
-  const errorHandler = (err: unknown) => {
+  var errorHandler = (err: unknown) => {
     scriptTag.removeEventListener('load', loadHandler);
     scriptTag.removeEventListener('error', errorHandler);
     handler(item.src, err);
@@ -48,29 +48,29 @@ interface ScriptState {
   handlers: ((src: string, err?: unknown) => void)[];
 }
 
-const createDocumentScriptLoader = (doc: Document) => {
+var createDocumentScriptLoader = (doc: Document) => {
   let lookup: Record<string, ScriptState> = {};
 
-  const scriptLoadOrErrorHandler = (src: string, err?: unknown) => {
-    const item = lookup[src];
+  var scriptLoadOrErrorHandler = (src: string, err?: unknown) => {
+    var item = lookup[src];
     item.done = true;
     item.error = err;
-    for (const h of item.handlers) {
+    for (var h of item.handlers) {
       h(src, err);
     }
     item.handlers = [];
   };
 
-  const loadScripts = (items: ScriptItem[], success: () => void, failure?: (err: unknown) => void) => {
+  var loadScripts = (items: ScriptItem[], success: () => void, failure?: (err: unknown) => void) => {
     // eslint-disable-next-line no-console
-    const failureOrLog = (err: unknown) => failure !== undefined ? failure(err) : console.error(err);
+    var failureOrLog = (err: unknown) => failure !== undefined ? failure(err) : console.error(err);
     if (items.length === 0) {
       failureOrLog(new Error('At least one script must be provided'));
       return;
     }
     let successCount = 0;
     let failed = false;
-    const loaded = (_src: string, err?: unknown) => {
+    var loaded = (_src: string, err?: unknown) => {
       if (failed) {
         return;
       }
@@ -81,8 +81,8 @@ const createDocumentScriptLoader = (doc: Document) => {
         success();
       }
     };
-    for (const item of items) {
-      const existing = lookup[item.src];
+    for (var item of items) {
+      var existing = lookup[item.src];
       if (existing) {
         if (existing.done) {
           loaded(item.src, existing.error);
@@ -91,7 +91,7 @@ const createDocumentScriptLoader = (doc: Document) => {
         }
       } else {
         // create a new entry
-        const id = uuid('tiny-');
+        var id = uuid('tiny-');
         lookup[item.src] = {
           id,
           src: item.src,
@@ -104,9 +104,9 @@ const createDocumentScriptLoader = (doc: Document) => {
     }
   };
 
-  const deleteScripts = () => {
-    for (const item of Object.values(lookup)) {
-      const scriptTag = doc.getElementById(item.id);
+  var deleteScripts = () => {
+    for (var item of Object.values(lookup)) {
+      var scriptTag = doc.getElementById(item.id);
       if (scriptTag != null && scriptTag.tagName === 'SCRIPT') {
         scriptTag.parentNode?.removeChild(scriptTag);
       }
@@ -114,7 +114,7 @@ const createDocumentScriptLoader = (doc: Document) => {
     lookup = {};
   };
 
-  const getDocument = () => doc;
+  var getDocument = () => doc;
 
   return {
     loadScripts,
@@ -125,10 +125,10 @@ const createDocumentScriptLoader = (doc: Document) => {
 
 type DocumentScriptLoader = ReturnType<typeof createDocumentScriptLoader>;
 
-const createScriptLoader = () => {
-  const cache: DocumentScriptLoader[] = [];
+var createScriptLoader = () => {
+  var cache: DocumentScriptLoader[] = [];
 
-  const getDocumentScriptLoader = (doc: Document) => {
+  var getDocumentScriptLoader = (doc: Document) => {
     let loader = cache.find((l) => l.getDocument() === doc);
     if (loader === undefined) {
       loader = createDocumentScriptLoader(doc);
@@ -137,8 +137,8 @@ const createScriptLoader = () => {
     return loader;
   };
 
-  const loadList = (doc: Document, items: ScriptItem[], delay: number, success: () => void, failure?: (err: unknown) => void) => {
-    const doLoad = () => getDocumentScriptLoader(doc).loadScripts(items, success, failure);
+  var loadList = (doc: Document, items: ScriptItem[], delay: number, success: () => void, failure?: (err: unknown) => void) => {
+    var doLoad = () => getDocumentScriptLoader(doc).loadScripts(items, success, failure);
     if (delay > 0) {
       setTimeout(doLoad, delay);
     } else {
@@ -146,7 +146,7 @@ const createScriptLoader = () => {
     }
   };
 
-  const reinitialize = () => {
+  var reinitialize = () => {
     for (let loader = cache.pop(); loader != null; loader = cache.pop()) {
       loader.deleteScripts();
     }
@@ -158,4 +158,4 @@ const createScriptLoader = () => {
   };
 };
 
-export const ScriptLoader = createScriptLoader();
+export var ScriptLoader = createScriptLoader();
