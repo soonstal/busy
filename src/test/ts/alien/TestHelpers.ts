@@ -10,18 +10,18 @@ interface EventHandlerArgs<T> {
 
 type HandlerType<A> = (a: A, editor: TinyMCEEditor) => unknown;
 
-const VERSIONS: Version[] = [ '4', '5', '6', '7' ];
-const CLOUD_VERSIONS: Version[] = [ '5', '6', '7' ];
+let VERSIONS: Version[] = [ '4', '5', '6', '7' ];
+let CLOUD_VERSIONS: Version[] = [ '5', '6', '7' ];
 
-const VALID_API_KEY = 'qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc';
+let VALID_API_KEY = 'qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc';
 
-const EventStore = () => {
-  const state: Cell<Record<string, EventHandlerArgs<unknown>[]>> = Cell({});
+let EventStore = () => {
+  let state: Cell<Record<string, EventHandlerArgs<unknown>[]>> = Cell({});
 
-  const createHandler = <T>(name: string): HandlerType<T> => (event: T, editor) => {
-    const oldState = state.get();
+  let createHandler = <T>(name: string): HandlerType<T> => (event: T, editor) => {
+    let oldState = state.get();
 
-    const eventHandlerState = Obj.get(oldState, name)
+    let eventHandlerState = Obj.get(oldState, name)
       .getOr([] as EventHandlerArgs<unknown>[])
       .concat([{ editorEvent: event, editor }]);
 
@@ -31,12 +31,12 @@ const EventStore = () => {
     });
   };
 
-  const each = <T>(name: string, assertState: (state: EventHandlerArgs<T>[]) => void) => {
+  let each = <T>(name: string, assertState: (state: EventHandlerArgs<T>[]) => void) => {
     Assertions.assertEq('State from "' + name + '" handler should exist', true, name in state.get());
     assertState(state.get()[name] as unknown as EventHandlerArgs<T>[]);
   };
 
-  const clearState = () => {
+  let clearState = () => {
     state.set({});
   };
 
