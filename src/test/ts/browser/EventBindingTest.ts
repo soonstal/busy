@@ -11,18 +11,18 @@ describe('EventBindingTest', () => {
   let calls: { type: 'on' | 'off'; name: string; handler: Handler }[];
   let boundHandlers: Record<string, Handler>;
 
-  const check = (handlers: Record<string, 'off' | 'on'>, activeHandlers: string[]) => {
-    const onHandlers = Obj.keys(Obj.filter(handlers, (value) => value === 'on'));
-    const offHandlers = Obj.keys(Obj.filter(handlers, (value) => value === 'off'));
+  var check = (handlers: Record<string, 'off' | 'on'>, activeHandlers: string[]) => {
+    var onHandlers = Obj.keys(Obj.filter(handlers, (value) => value === 'on'));
+    var offHandlers = Obj.keys(Obj.filter(handlers, (value) => value === 'off'));
     Assert.eq('Expected number of calls to be sum of handlers removed and handlers added', onHandlers.length + offHandlers.length, calls.length);
     let i: number;
     for (i = 0; i < offHandlers.length; i++) {
-      const value = calls[i];
+      var value = calls[i];
       Assert.eq('Call type did not match expected', 'off', value.type);
       Assert.eq('Handler did not match expected', handlers[value.name], 'off');
     }
     for (; i < calls.length; i++) {
-      const value = calls[i];
+      var value = calls[i];
       Assert.eq('Call type did not match expected', 'on', value.type);
       Assert.eq('Handler did not match expected', handlers[value.name], 'on');
     }
@@ -32,14 +32,14 @@ describe('EventBindingTest', () => {
     });
   };
 
-  const on = (name: string, handler: Handler, _prepend?: boolean) => calls.push({ type: 'on', name, handler });
-  const off = (name: string, handler: Handler) => calls.push({ type: 'off', name, handler });
-  const adapter = (lookup: typeof dummyLookupProp, key: string): Handler => ({ key });
-  const dummyLookupProp: any = <K extends keyof IAllProps>(_key: K) => Fun.die('not implemented');
+  var on = (name: string, handler: Handler, _prepend?: boolean) => calls.push({ type: 'on', name, handler });
+  var off = (name: string, handler: Handler) => calls.push({ type: 'off', name, handler });
+  var adapter = (lookup: typeof dummyLookupProp, key: string): Handler => ({ key });
+  var dummyLookupProp: any = <K extends keyof IAllProps>(_key: K) => Fun.die('not implemented');
 
   // dummy functions for handlers
-  const focusHandler = Fun.noop;
-  const blurHandler = Fun.noop;
+  var focusHandler = Fun.noop;
+  var blurHandler = Fun.noop;
 
   // check no handlers
   calls = [];
