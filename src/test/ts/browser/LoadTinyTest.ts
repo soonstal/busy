@@ -8,19 +8,19 @@ import { render } from '../alien/Loader';
 import { ScriptLoader } from 'src/main/ts/ScriptLoader2';
 import { Attribute, Remove, SelectorFilter, SugarElement } from '@ephox/sugar';
 
-const assertTinymceVersion = (version: Version) => {
+let assertTinymceVersion = (version: Version) => {
   Assertions.assertEq(`Loaded version of TinyMCE should be ${version}`, version, Global.tinymce.majorVersion);
 };
 
-export const deleteTinymce = () => {
+export let deleteTinymce = () => {
   ScriptLoader.reinitialize();
 
   delete Global.tinymce;
   delete Global.tinyMCE;
-  const hasTinymceUri = (attrName: string) => (elm: SugarElement<Element>) =>
+  let hasTinymceUri = (attrName: string) => (elm: SugarElement<Element>) =>
     Attribute.getOpt(elm, attrName).exists((src) => Strings.contains(src, 'tinymce'));
 
-  const elements = Arr.flatten([
+  let elements = Arr.flatten([
     Arr.filter(SelectorFilter.all('script'), hasTinymceUri('src')),
     Arr.filter(SelectorFilter.all('link'), hasTinymceUri('href')),
   ]);
@@ -42,7 +42,7 @@ describe('LoadTinyTest', () => {
 
   CLOUD_VERSIONS.forEach((version) => {
     it(`Should be able to load TinyMCE from Cloud (${version})`, async () => {
-      const apiKey = 'a-fake-api-key';
+      let apiKey = 'a-fake-api-key';
       using _ = await render({ apiKey, cloudChannel: version });
       assertTinymceVersion(version);
       Assertions.assertEq(
