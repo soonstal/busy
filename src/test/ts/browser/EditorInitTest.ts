@@ -6,15 +6,15 @@ import * as Loader from '../alien/Loader';
 import { TinyAssertions } from '@ephox/mcagar';
 import { IAllProps } from 'src/main/ts';
 
-let assertProperty = (obj: {}, propName: string, expected: unknown) => {
+const assertProperty = (obj: {}, propName: string, expected: unknown) => {
   Assertions.assertEq(propName.toString() + ' should be ' + expected, expected, (obj as any)[propName]);
 };
 
 describe('EditorInitTest', () => {
   VERSIONS.forEach((version) =>
     Loader.withVersion(version, (renderWithVersion) => {
-      let defaultProps: IAllProps = { apiKey: VALID_API_KEY, cloudChannel: version };
-      let render = (props: IAllProps = {}) => renderWithVersion({ ...defaultProps, ...props });
+      const defaultProps: IAllProps = { apiKey: VALID_API_KEY, cloudChannel: version };
+      const render = (props: IAllProps = {}) => renderWithVersion({ ...defaultProps, ...props });
 
       context('tagName prop changes element', () => {
         it('is div by default for inline', async () => {
