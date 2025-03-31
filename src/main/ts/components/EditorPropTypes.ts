@@ -8,7 +8,7 @@ export type IEventPropTypes = CopyProps<IEvents>;
 
 export interface IEditorPropTypes extends IEventPropTypes, CopyProps<IProps> {}
 
-export const eventPropTypes: IEventPropTypes = {
+export let eventPropTypes: IEventPropTypes = {
   onActivate: PropTypes.func,
   onAddUndo: PropTypes.func,
   onBeforeAddUndo: PropTypes.func,
@@ -86,7 +86,7 @@ export const eventPropTypes: IEventPropTypes = {
   onScriptsLoadError: PropTypes.func,
 };
 
-export const EditorPropTypes: IEditorPropTypes = {
+export let EditorPropTypes: IEditorPropTypes = {
   apiKey: PropTypes.string,
   licenseKey: PropTypes.string,
   id: PropTypes.string,
