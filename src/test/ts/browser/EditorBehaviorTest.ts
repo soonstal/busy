@@ -12,22 +12,22 @@ import { EventStore, VERSIONS } from '../alien/TestHelpers';
 type SetContentEvent = EditorEvent<Events.EditorEventMap['SetContent']>;
 
 describe('EditorBehaviourTest', () => {
-  const browser = PlatformDetection.detect().browser;
+  let browser = PlatformDetection.detect().browser;
   if (browser.isIE()) {
     // INT-2278: This test currently times out in IE so we are skipping it
     return;
   }
-  const versionRegex = /6|7/;
+  let versionRegex = /6|7/;
 
-  const isEditor = (val: unknown): val is TinyMCEEditor => {
-    const tinymce = getTinymce(window);
+  let isEditor = (val: unknown): val is TinyMCEEditor => {
+    let tinymce = getTinymce(window);
     if (!tinymce) {
       return false;
     }
     return val instanceof tinymce.Editor;
   };
 
-  const eventStore = EventStore();
+  let eventStore = EventStore();
 
   VERSIONS.forEach((version) =>
     Loader.withVersion(version, (render) => {
@@ -137,7 +137,7 @@ describe('EditorBehaviourTest', () => {
       });
       it('INT-3226: onEditorChange is triggered only once after calling insertContent', async () => {
         using ctx = await render({ onEditorChange: eventStore.createHandler('onEditorChange') });
-        const { editor } = ctx;
+        let { editor } = ctx;
         editor.setContent('<p>abc</p>');
         await Waiter.pTryUntilPredicate('Editor content is set to correct value', () => ctx.editor.getContent() === '<p>abc</p>');
         eventStore.clearState();
