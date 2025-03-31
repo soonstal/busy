@@ -2,15 +2,15 @@ import { eventPropTypes, IEventPropTypes } from './components/EditorPropTypes';
 import { IAllProps } from './components/Editor';
 import type { Editor as TinyMCEEditor, EditorEvent } from 'tinymce';
 
-export const isFunction = (x: unknown): x is Function => typeof x === 'function';
+export var isFunction = (x: unknown): x is Function => typeof x === 'function';
 
-const isEventProp = (name: string): name is keyof IEventPropTypes => name in eventPropTypes;
+var isEventProp = (name: string): name is keyof IEventPropTypes => name in eventPropTypes;
 
-const eventAttrToEventName = <T extends string>(attrName: `on${T}`): T => attrName.substr(2) as T;
+var eventAttrToEventName = <T extends string>(attrName: `on${T}`): T => attrName.substr(2) as T;
 
 type PropLookup = <K extends keyof IAllProps>(key: K) => IAllProps[K] | undefined;
 
-export const configHandlers2 = <H> (
+export var configHandlers2 = <H> (
   handlerLookup: PropLookup,
   on: (name: string, handler: H) => void,
   off: (name: string, handler: H) => void,
@@ -19,29 +19,29 @@ export const configHandlers2 = <H> (
   props: Partial<IAllProps>,
   boundHandlers: Record<string, H>
 ): void => {
-  const prevEventKeys = Object.keys(prevProps).filter(isEventProp);
-  const currEventKeys = Object.keys(props).filter(isEventProp);
+  var prevEventKeys = Object.keys(prevProps).filter(isEventProp);
+  var currEventKeys = Object.keys(props).filter(isEventProp);
 
-  const removedKeys = prevEventKeys.filter((key) => props[key] === undefined);
-  const addedKeys = currEventKeys.filter((key) => prevProps[key] === undefined);
+  var removedKeys = prevEventKeys.filter((key) => props[key] === undefined);
+  var addedKeys = currEventKeys.filter((key) => prevProps[key] === undefined);
 
   removedKeys.forEach((key) => {
     // remove event handler
-    const eventName = eventAttrToEventName(key);
-    const wrappedHandler = boundHandlers[eventName];
+    var eventName = eventAttrToEventName(key);
+    var wrappedHandler = boundHandlers[eventName];
     off(eventName, wrappedHandler);
     delete boundHandlers[eventName];
   });
 
   addedKeys.forEach((key) => {
-    const wrappedHandler = adapter(handlerLookup, key);
-    const eventName = eventAttrToEventName(key);
+    var wrappedHandler = adapter(handlerLookup, key);
+    var eventName = eventAttrToEventName(key);
     boundHandlers[eventName] = wrappedHandler;
     on(eventName, wrappedHandler);
   });
 };
 
-export const configHandlers = (
+export var configHandlers = (
   editor: TinyMCEEditor,
   prevProps: Partial<IAllProps>,
   props: Partial<IAllProps>,
@@ -61,19 +61,19 @@ export const configHandlers = (
 
 let unique = 0;
 
-export const uuid = (prefix: string): string => {
-  const time = Date.now();
-  const random = Math.floor(Math.random() * 1000000000);
+export var uuid = (prefix: string): string => {
+  var time = Date.now();
+  var random = Math.floor(Math.random() * 1000000000);
 
   unique++;
 
   return prefix + '_' + random + unique + String(time);
 };
 
-export const isTextareaOrInput = (element: Element | null): element is (HTMLTextAreaElement | HTMLInputElement) =>
+export var isTextareaOrInput = (element: Element | null): element is (HTMLTextAreaElement | HTMLInputElement) =>
   element !== null && (element.tagName.toLowerCase() === 'textarea' || element.tagName.toLowerCase() === 'input');
 
-const normalizePluginArray = (plugins?: string | string[]): string[] => {
+var normalizePluginArray = (plugins?: string | string[]): string[] => {
   if (typeof plugins === 'undefined' || plugins === '') {
     return [];
   }
@@ -82,11 +82,11 @@ const normalizePluginArray = (plugins?: string | string[]): string[] => {
 };
 
 // eslint-disable-next-line max-len
-export const mergePlugins = (initPlugins: string | string[] | undefined, inputPlugins: string | string[] | undefined): string[] => normalizePluginArray(initPlugins).concat(normalizePluginArray(inputPlugins));
+export var mergePlugins = (initPlugins: string | string[] | undefined, inputPlugins: string | string[] | undefined): string[] => normalizePluginArray(initPlugins).concat(normalizePluginArray(inputPlugins));
 
-export const isBeforeInputEventAvailable = () => window.InputEvent && typeof (InputEvent.prototype as any).getTargetRanges === 'function';
+export var isBeforeInputEventAvailable = () => window.InputEvent && typeof (InputEvent.prototype as any).getTargetRanges === 'function';
 
-export const isInDoc = (elem: Node) => {
+export var isInDoc = (elem: Node) => {
   if (!('isConnected' in Node.prototype)) {
     // Fallback for IE and old Edge
     let current = elem;
@@ -101,7 +101,7 @@ export const isInDoc = (elem: Node) => {
   return elem.isConnected;
 };
 
-export const setMode = (editor: TinyMCEEditor | undefined, mode: 'readonly' | 'design') => {
+export var setMode = (editor: TinyMCEEditor | undefined, mode: 'readonly' | 'design') => {
   if (editor !== undefined) {
     if (editor.mode != null && typeof editor.mode === 'object' && typeof editor.mode.set === 'function') {
       editor.mode.set(mode);
